@@ -22,6 +22,7 @@ public class Avocat extends Personne {
 
     public Avocat() {
     }
+
     //endregion
 
     //region Getter | Setter
@@ -70,6 +71,84 @@ public class Avocat extends Personne {
         }
 
         return avocats;
+    }
+    //endregion
+
+    //region getAvocatById
+    public static Avocat getAvocatById(int id) {
+        Avocat avocat = null;
+
+        try {
+            Connection connection = DatabaseConnection.getConnection();
+            Statement statement = connection.createStatement();
+            String query = "SELECT avocat.*, personne.nom, personne.numero_secu " +
+                            "FROM avocat " +
+                            "JOIN personne ON avocat.id = personne.id " +
+                            "WHERE avocat.id = " + id;
+            ResultSet resultSet = statement.executeQuery(query);
+
+            if (resultSet.next()) {
+                avocat = new Avocat();
+                avocat.setId(id);
+                avocat.setNom(resultSet.getString("nom"));
+                avocat.setNumeroSecu(resultSet.getString("numero_secu"));
+                avocat.setNombreAffaires(resultSet.getInt("nombre_affaires"));
+                avocat.setAdresseCabinet(resultSet.getString("adresse_cabinet"));
+            }
+
+            statement.close();
+            resultSet.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return avocat;
+    }
+    //endregion
+
+    //region create
+    public static void create(Avocat avocat) {
+        try {
+            Connection connection = DatabaseConnection.getConnection();
+            Statement statement = connection.createStatement();
+            statement.executeUpdate("INSERT INTO avocat (nombre_affaires, adresse_cabinet, id_personne) VALUES ('" + avocat.getNombreAffaires() + "', '" + avocat.getAdresseCabinet() + "', '" + avocat.getId() + "')");
+
+            statement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    //endregion
+
+    //region update
+    public static void update(Avocat avocat) {
+        try {
+            Connection connection = DatabaseConnection.getConnection();
+            Statement statement = connection.createStatement();
+            statement.executeUpdate("UPDATE avocat SET nombre_affaires = '" + avocat.getNombreAffaires() + "', adresse_cabinet = '" + avocat.getAdresseCabinet() + "' WHERE id = " + avocat.getId());
+
+            statement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    //endregion
+
+    //region delete
+    public static void delete(int id) {
+        try {
+            Connection connection = DatabaseConnection.getConnection();
+            Statement statement = connection.createStatement();
+            statement.executeUpdate("DELETE FROM avocat WHERE id = " + id);
+
+            statement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     //endregion
 
