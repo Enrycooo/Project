@@ -40,34 +40,34 @@ public class Avocat extends Personne {
 
     //endregion
     //region create
-    public static void create(Avocat avocat) {
+    public static void create(String nom, String numeroSecu, int nbrAffaires, String adresseCabinet) {
         try {
+            // Insère un avocat dans la table Personne
             Connection connection = DatabaseConnection.getConnection();
-            String sql = "INSERT INTO avocat (nombre_affaires, adresse_cabinet, id_personne) VALUES (?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement personne = connection.prepareStatement("INSERT INTO Personne (nom, numero_secu) VALUES (?, ?)");
+            personne.setString(1, nom);
+            personne.setString(2, numeroSecu);
+            personne.executeUpdate();
 
-            preparedStatement.setInt(1, avocat.getNombreAffaires());
-            preparedStatement.setString(2, avocat.getAdresseCabinet());
-
-            // Exécution de la requête d'insertion
-            int lignesAffectees = preparedStatement.executeUpdate();
-
-            if (lignesAffectees > 0) {
-                ResultSet resultSet = preparedStatement.getGeneratedKeys();
-                if (resultSet.next()) {
-                    int lastInsertId = resultSet.getInt(1);
-                    preparedStatement.close();
-                    resultSet.close();
-                    connection.close();
-                    DatabaseConnection.closeConnection();
-
-                    System.out.println("Dernière ID insérée : " + lastInsertId);
-                }
-            } else {
-                preparedStatement.close();
-                connection.close();
-                DatabaseConnection.closeConnection();
+            //region Récupération id de la personne
+            String query = "SELECT LAST_INSERT_ID()";
+            int lastInsertedId = 0;
+            ResultSet resultSet = personne.executeQuery(query);
+            if (resultSet.next()) {
+                lastInsertedId = resultSet.getInt(1);
             }
+            //endregion
+
+            PreparedStatement enseignant = connection.prepareStatement("INSERT INTO Avocat (nombre_affaires, adresse_cabinet, id_personne) VALUES (?, ?, ?)");
+            enseignant.setInt(1, nbrAffaires);
+            enseignant.setString(2, adresseCabinet);
+            enseignant.setInt(3, lastInsertedId);
+            enseignant.executeUpdate();
+
+            enseignant.close();
+            personne.close();
+            connection.close();
+            DatabaseConnection.closeConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }

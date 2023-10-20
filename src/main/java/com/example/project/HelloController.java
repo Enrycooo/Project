@@ -1,14 +1,19 @@
 package com.example.project;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import Class.Permanent;
+import Class.Vacataire;
+import Class.Vendeur;
+import Class.Avocat;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("ALL")
 public class HelloController {
@@ -36,12 +41,10 @@ public class HelloController {
     private Map<String, TextField> dynamicTextFields = new HashMap<>(); // Map pour stocker les TextFields dynamiques
 
     @FXML
-    protected void onComboBoxClick() {
     public void initialize() {
         // Initialisez choiceBox2 ici si nécessaire.
         choiceBox2 = createStyledComboBox("Type d'Enseignant", "Permanent", "Vacataire");
     }
-
     @FXML
     protected void onComboBox1Click() {
         String selectedValue = choiceBox.getValue();
@@ -52,15 +55,13 @@ public class HelloController {
         switch (selectedValue) {
             case "Enseignant":
                 TextField coursField = createStyledTextField("Nombre de cours");
+                dynamicTextFields.put("textFieldNbrCours", coursField);
                 TextField specialtyField = createStyledTextField("Spécialité");
+                dynamicTextFields.put("textFieldSpecialite", specialtyField);
 
                 // Ajouter les TextFields au conteneur.
-                dynamicFieldsContainer.getChildren().addAll(coursesField, specialtyField);
+                dynamicFieldsContainer.getChildren().addAll(coursField, specialtyField);
 
-                // Stocke les TextFields dans Map avec clé unique
-                dynamicTextFields.put("textFieldNbrCours", coursesField);
-                dynamicTextFields.put("textFieldSpecialite", specialtyField);
-            }
                 // Créer un conteneur VBox pour aligner les éléments horizontalement.
                 VBox enseignantFields = new VBox(30.0); // Espacement entre les éléments.
 
@@ -72,14 +73,18 @@ public class HelloController {
                 break;
             case "Vendeur":
                 TextField ancienneteField = createStyledTextField("Ancienneté");
+                dynamicTextFields.put("textFieldAnciennete", ancienneteField);
                 TextField nomStandField = createStyledTextField("Nom du stand");
+                dynamicTextFields.put("textFieldNomStand", nomStandField);
 
                 // Ajouter les éléments au conteneur.
                 dynamicFieldsContainer.getChildren().addAll(ancienneteField, nomStandField);
                 break;
             case "Avocat":
                 TextField nbAffaireField = createStyledTextField("Nombre d'affaires");
-                TextField AdresseCabField = createStyledTextField("adresse du cabinet");
+                dynamicTextFields.put("textFieldNbrAffaire", nbAffaireField);
+                TextField AdresseCabField = createStyledTextField("Adresse du cabinet");
+                dynamicTextFields.put("textFieldAdresseCabinet", AdresseCabField);
 
                 // Ajouter les éléments au conteneur.
                 dynamicFieldsContainer.getChildren().addAll(nbAffaireField, AdresseCabField);
@@ -106,7 +111,7 @@ public class HelloController {
     public void onSubmitButtonClick(ActionEvent actionEvent) {
 
         String types = choiceBox.getValue();    // Valeur types de personne
-
+        String typesEnseignant = choiceBox2.getValue();
         String nom = textFieldNom.getText();
         String numSecu = textFieldNumSecu.getText();
 
@@ -114,24 +119,38 @@ public class HelloController {
 
         switch (types){
             case "Enseignant":
-                int nbrCours = Integer.parseInt(dynamicTextFields.get("textFieldNbrCours").getText());  // Conversion en int
-                String specialite = dynamicTextFields.get("textFieldSpecialite").getText();
-                Enseignant.create(nom, numSecu, nbrCours, specialite);
-
+                switch (typesEnseignant){
+                    case "Vacataire":
+                        int nbrVacations = Integer.parseInt(dynamicTextFields.get("textFieldNbrVacations").getText());  // Conversion en int
+                        int nbrCours = Integer.parseInt(dynamicTextFields.get("textFieldNbrCours").getText());  // Conversion en int
+                        String specialite = dynamicTextFields.get("textFieldSpecialite").getText();
+                        Vacataire.create(nom, numSecu, nbrCours, specialite, nbrVacations);
+                        break;
+                    case "Permanent":
+                        int numBureau = Integer.parseInt(dynamicTextFields.get("textFieldNumeroBureau").getText());  // Conversion en int
+                        nbrCours = Integer.parseInt(dynamicTextFields.get("textFieldNbrCours").getText());  // Conversion en int
+                        specialite = dynamicTextFields.get("textFieldSpecialite").getText();
+                        Permanent.create(nom, numSecu, nbrCours, specialite, numBureau);
+                        break;
+                    default:
+                        System.out.println("Types d'enseignant invalide");
+                }
                 break;
             case "Vendeur":
-
+                    int anciennete = Integer.parseInt(dynamicTextFields.get("textFieldAnciennete").getText());
+                    String nomDuStand = dynamicTextFields.get("textFieldNomStand").getText();
+                    Vendeur.create(nom, numSecu, anciennete, nomDuStand);
                 break;
             case "Avocat":
-
+                    int nbrAffaires = Integer.parseInt(dynamicTextFields.get("textFieldNbrAffaire").getText());
+                    String adresseCabinet = dynamicTextFields.get("textFieldAdresseCabinet").getText();
+                    Avocat.create(nom, numSecu, nbrAffaires, adresseCabinet);
                 break;
             default:
-                System.out.println("Valeur invalide");
+                System.out.println("Types de personne invalide");
         }
 
     }
-}
-
     private ComboBox<String> createStyledComboBox(String promptText, String... items) {
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.setPromptText(promptText);
@@ -170,7 +189,9 @@ public class HelloController {
         dynamicFieldsContainer.getChildren().clear();
 
         TextField coursField = createStyledTextField("Nombre de cours");
+        dynamicTextFields.put("textFieldNbrCours", coursField);
         TextField specialtyField = createStyledTextField("Spécialité");
+        dynamicTextFields.put("textFieldSpecialite", specialtyField);
 
         // Créer un conteneur VBox pour aligner les éléments horizontalement.
         VBox enseignantFields = new VBox(30.0); // Espacement entre les éléments.
@@ -183,12 +204,14 @@ public class HelloController {
         switch (selectedValue2) {
             case "Permanent":
                 TextField nbBureauField = createStyledTextField("Numéro de bureau");
+                dynamicTextFields.put("textFieldNumeroBureau", nbBureauField);
 
                 // Ajouter les éléments au conteneur.
                 dynamicFieldsContainer.getChildren().addAll(nbBureauField);
                 break;
             case "Vacataire":
                 TextField nbVacationField = createStyledTextField("Nombre de vacations");
+                dynamicTextFields.put("textFieldNbrVacations", nbVacationField);
 
                 // Ajouter les éléments au conteneur.
                 dynamicFieldsContainer.getChildren().addAll(nbVacationField);
@@ -197,5 +220,4 @@ public class HelloController {
                 break;
         }
     }
-
 }
