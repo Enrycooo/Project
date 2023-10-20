@@ -18,7 +18,7 @@
    <children>
       <VBox layoutX="191.0" layoutY="46.0" prefHeight="513.0" prefWidth="418.0" spacing="30.0">
          <children>
-            <TextField prefHeight="26.0" prefWidth="320.0" promptText="Nom">
+            <TextField fx:id="textFieldNom" prefHeight="26.0" prefWidth="320.0" promptText="Nom">
                <VBox.margin>
                   <Insets left="125.0" right="125.0" top="25.0" />
                </VBox.margin>
@@ -28,7 +28,7 @@
                   <Insets left="125.0" right="125.0" />
                </VBox.margin>
             </TextField>
-            <TextField alignment="CENTER" prefHeight="25.0" prefWidth="150.0" promptText="N° Sécurité">
+            <TextField fx:id="textFieldNumSecu" alignment="CENTER" prefHeight="25.0" prefWidth="150.0" promptText="N° Sécurité">
                <VBox.margin>
                   <Insets left="125.0" right="125.0" />
                </VBox.margin>
@@ -44,7 +44,7 @@
             </ComboBox>
             <VBox fx:id="dynamicFieldsContainer" spacing="10.0">
             </VBox>
-            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Valider" translateX="170.0" />
+            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Valider" translateX="170.0" onAction="#onSubmitButtonClick" />
          </children>
       </VBox>
    </children>

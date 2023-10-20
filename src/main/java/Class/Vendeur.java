@@ -59,67 +59,6 @@ public class Vendeur extends Personne {
     }
     //endregion
 
-    //region getVendeurById
-    public static Vendeur getVendeurById(int id) {
-        Vendeur vendeur = null;
-
-        try {
-            Connection connection = DatabaseConnection.getConnection();
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT vendeur.*, personne.nom, personne.numero_secu FROM vendeur JOIN personne ON vendeur.id_personne = personne.id WHERE vendeur.id ="+id);
-
-            if (resultSet.next()) {
-                vendeur = new Vendeur();
-                vendeur.setId(resultSet.getInt("id"));
-                vendeur.setNom(resultSet.getString("nom"));
-                vendeur.setNumeroSecu(resultSet.getString("numero_secu"));
-                vendeur.setAnciennete(resultSet.getInt("anciennete"));
-                vendeur.setNomDuStand(resultSet.getString("nom_du_stand"));
-            }
-
-            statement.close();
-            resultSet.close();
-            connection.close();
-            DatabaseConnection.closeConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return vendeur;
-    }
-    //endregion
-
-    //region getAllVendeurs
-    public static List<Vendeur> getAllVendeurs() {
-        List<Vendeur> vendeurs = new ArrayList<>();
-
-        try {
-            Connection connection = DatabaseConnection.getConnection();
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT vendeur.*, personne.nom, personne.numero_secu FROM vendeur JOIN personne ON vendeur.id_personne = personne.id");
-
-            while (resultSet.next()) {
-                Vendeur vendeur = new Vendeur();
-                vendeur.setId(resultSet.getInt("id"));
-                vendeur.setNom(resultSet.getString("nom"));
-                vendeur.setNumeroSecu(resultSet.getString("numero_secu"));
-                vendeur.setAnciennete(resultSet.getInt("anciennete"));
-                vendeur.setNomDuStand(resultSet.getString("nom_du_stand"));
-                vendeurs.add(vendeur);
-            }
-
-            statement.close();
-            resultSet.close();
-            connection.close();
-            DatabaseConnection.closeConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        return vendeurs;
-    }
-    //endregion
-
     //region Create
     public static void create(String nom, String numeroSecu, int anciennete, String nomDuStand) {
         try {
@@ -152,52 +91,6 @@ public class Vendeur extends Personne {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-    //endregion
-
-    //region Update
-    public static void update(Vendeur vendeur) {
-
-        try {
-            Connection connection = DatabaseConnection.getConnection();
-
-            Statement statement = connection.createStatement();
-            statement.executeUpdate("UPDATE personne SET nom = '" + vendeur.getNom() + "', numero_secu = '" + vendeur.getNumeroSecu() + "' WHERE id = " + vendeur.getId());
-            statement.executeUpdate("UPDATE vendeur SET anciennete = '" + vendeur.getAnciennete() + "', nom_du_stand = '" + vendeur.getNomDuStand() + "' WHERE id = " + vendeur.getId());
-
-            statement.close();
-            connection.close();
-            DatabaseConnection.closeConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    //endregion
-
-    //region Delete
-    public static void delete(int id) {
-        try {
-            Connection connection = DatabaseConnection.getConnection();
-            Statement statement = connection.createStatement();
-            statement.executeUpdate("DELETE FROM vendeur WHERE id = " + id);
-
-            statement.close();
-            connection.close();
-            DatabaseConnection.closeConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    //endregion
-
-    //region toString
-    @Override
-    public String toString() {
-        return  "id=" + getId() +
-                ", Nom ='" + getNom() + '\'' +
-                ", Numéro de sécu ='" + getNumeroSecu() + '\'' +
-                ", Ancienneté =" + anciennete +
-                ", Nom du stand ='" + nomDuStand + '\'';
     }
     //endregion
 }
