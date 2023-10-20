@@ -71,6 +71,7 @@ public class Personne {
             statement.close();
             resultSet.close();
             connection.close();
+            DatabaseConnection.closeConnection();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -98,6 +99,7 @@ public class Personne {
             statement.close();
             resultSet.close();
             connection.close();
+            DatabaseConnection.closeConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -115,6 +117,7 @@ public class Personne {
 
             statement.close();
             connection.close();
+            DatabaseConnection.closeConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -130,6 +133,7 @@ public class Personne {
 
             statement.close();
             connection.close();
+            DatabaseConnection.closeConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -145,6 +149,7 @@ public class Personne {
 
             statement.close();
             connection.close();
+            DatabaseConnection.closeConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }
