@@ -1,44 +1,49 @@
 package com.example.project;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 public class HelloController {
     @FXML
-    private Label welcomeText;
-    @FXML
     private ComboBox<String> choiceBox;
     @FXML
-    private Label lblNombreCours;
+    private VBox textFieldContainer;
     @FXML
-    private Label lblSpecialite;
-    @FXML
-    private Label txtSpecialite;
-    @FXML
-    private Label ;
-
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("C'est toi le plus beau habibi");
-    }
-
+    private VBox dynamicFieldsContainer;
     @FXML
     protected void onComboBoxClick() {
         String selectedValue = choiceBox.getValue();
 
+        // Nettoyer le conteneur des textfields existants.
+        dynamicFieldsContainer.getChildren().clear();
+
         if (selectedValue != null) {
             if (selectedValue.equals("Enseignant")) {
-                lblNombreCours.setVisible(true);
-                lblSpecialite.setVisible(true);
-                txtSpecialite.setVisible(true);
-                txtNombrecours.setVisible(true);
-            } else {
-                lblNombreCours.setVisible(false);
-                lblSpecialite.setVisible(false);
-                txtSpecialite.setVisible(false);
-                txtNombrecours.setVisible(false);
+                // Créer et ajouter les TextFields pour "Nombre de cours" et "Spécialité".
+                TextField coursesField = createStyledTextField("Nombre de cours");
+                TextField specialtyField = createStyledTextField("Spécialité");
+
+                // Ajouter les TextFields au conteneur.
+                dynamicFieldsContainer.getChildren().addAll(coursesField, specialtyField);
             }
         }
     }
+    private TextField createStyledTextField(String promptText) {
+        TextField textField = new TextField();
+        textField.setPromptText(promptText);
+        textField.setAlignment(Pos.CENTER);
+        textField.setPrefHeight(25.0);
+        textField.setPrefWidth(150.0);
+
+        // Définir les marges en utilisant Insets.
+        Insets margin = new Insets(0, 125.0, 0, 125.0);
+        VBox.setMargin(textField, margin);
+
+        return textField;
+    }
 }
+
