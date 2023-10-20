@@ -23,7 +23,7 @@
         <children>
           <Label text="Nom" />
           <Label text="Numéro de sécurité" />
-          <ComboBox fx:id="choiceBox" prefWidth="150.0" promptText="Métier" visibleRowCount="3" onAction="#onHelloButtonClick">
+          <ComboBox fx:id="choiceBox" prefWidth="150.0" promptText="Métier" visibleRowCount="3" onAction="#onComboBoxClick">
             <items>
               <FXCollections fx:factory="observableArrayList">
                 <String fx:id="enseignant" fx:value="Enseignant" />
@@ -40,6 +40,9 @@
         <children>
           <TextField layoutX="10.0" layoutY="10.0" />
           <TextField layoutX="10.0" layoutY="45.0" />
+          <TextField layoutX="10.0" layoutY="45.0" visible="false" />
+          <TextField fx:id="txtNombrecours" layoutX="10.0" layoutY="45.0" visible="false"/>
+          <TextField fx:id="txtSpecialite" layoutX="10.0" layoutY="45.0" visible="false"/>
         </children>
       </VBox>
     </children>
