@@ -2,6 +2,7 @@ package com.example.project;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -115,23 +116,66 @@ public class HelloController {
         String nom = textFieldNom.getText();
         String numSecu = textFieldNumSecu.getText();
 
+
+        // Valider les champs de base
+        if (types == null || nom.isEmpty() || numSecu.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Champs obligatoires non remplis");
+            alert.setContentText("Veuillez remplir tous les champs obligatoires.");
+            alert.showAndWait();
+            return; // Arrêter la création si un champ est vide
+        }
+
         // VALIDATION
 
         switch (types){
             case "Enseignant":
+                if (typesEnseignant == null) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Erreur");
+                    alert.setHeaderText("Champs obligatoires non remplis");
+                    alert.setContentText("Veuillez sélectionner un type d'enseignant.");
+                    alert.showAndWait();
+                    return; // Arrêter la création si un champ est vide
+                }
                 switch (typesEnseignant){
                     case "Vacataire":
-                        int nbrVacations = Integer.parseInt(dynamicTextFields.get("textFieldNbrVacations").getText());  // Conversion en int
-                        int nbrCours = Integer.parseInt(dynamicTextFields.get("textFieldNbrCours").getText());  // Conversion en int
+                        String vacationsText = dynamicTextFields.get("textFieldNbrVacations").getText();
+                        String coursText = dynamicTextFields.get("textFieldNbrCours").getText();
                         String specialite = dynamicTextFields.get("textFieldSpecialite").getText();
+
+                        if (vacationsText.isEmpty() || coursText.isEmpty() || specialite.isEmpty()) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Erreur");
+                            alert.setHeaderText("Champs obligatoires non remplis");
+                            alert.setContentText("Veuillez remplir tous les champs.");
+                            alert.showAndWait();
+                            return; // Arrêter la création si un champ est vide
+                        }
+
+                        int nbrVacations = Integer.parseInt(vacationsText);
+                        int nbrCours = Integer.parseInt(coursText);
+
                         Vacataire.create(nom, numSecu, nbrCours, specialite, nbrVacations);
                         break;
                     case "Permanent":
-                        int numBureau = Integer.parseInt(dynamicTextFields.get("textFieldNumeroBureau").getText());  // Conversion en int
-                        nbrCours = Integer.parseInt(dynamicTextFields.get("textFieldNbrCours").getText());  // Conversion en int
-                        specialite = dynamicTextFields.get("textFieldSpecialite").getText();
-                        Permanent.create(nom, numSecu, nbrCours, specialite, numBureau);
-                        break;
+                        String numBureau = dynamicTextFields.get("textFieldNumeroBureau").getText();  // Conversion en int
+                        String nbrCours2 = dynamicTextFields.get("textFieldNbrCours").getText();  // Conversion en int
+                        String specialite2 = dynamicTextFields.get("textFieldSpecialite").getText();
+                        // Valider les champs de base
+                        if (numBureau.isEmpty() || nbrCours2.isEmpty() || specialite2.isEmpty()) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Erreur");
+                            alert.setHeaderText("Champs obligatoires non remplis");
+                            alert.setContentText("Veuillez remplir tous les champs.");
+                            alert.showAndWait();
+                            return; // Arrêter la création si un champ est vide
+                        }
+
+                        int numBureau2 = Integer.parseInt(numBureau);
+                        int nbrCours3 = Integer.parseInt(nbrCours2);
+                        Permanent.create(nom, numSecu, nbrCours3, specialite2, numBureau2);
                     default:
                         System.out.println("Types d'enseignant invalide");
                 }
@@ -139,11 +183,29 @@ public class HelloController {
             case "Vendeur":
                     int anciennete = Integer.parseInt(dynamicTextFields.get("textFieldAnciennete").getText());
                     String nomDuStand = dynamicTextFields.get("textFieldNomStand").getText();
+                // Valider les champs de base
+                if (anciennete == 0 || nomDuStand.isEmpty()) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Erreur");
+                    alert.setHeaderText("Champs obligatoires non remplis");
+                    alert.setContentText("Veuillez remplir tous les champs obligatoires.");
+                    alert.showAndWait();
+                    return; // Arrêter la création si un champ est vide
+                }
                     Vendeur.create(nom, numSecu, anciennete, nomDuStand);
                 break;
             case "Avocat":
                     int nbrAffaires = Integer.parseInt(dynamicTextFields.get("textFieldNbrAffaire").getText());
                     String adresseCabinet = dynamicTextFields.get("textFieldAdresseCabinet").getText();
+                // Valider les champs de base
+                if (nbrAffaires == 0 || adresseCabinet.isEmpty()) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Erreur");
+                    alert.setHeaderText("Champs obligatoires non remplis");
+                    alert.setContentText("Veuillez remplir tous les champs.");
+                    alert.showAndWait();
+                    return; // Arrêter la création si un champ est vide
+                }
                     Avocat.create(nom, numSecu, nbrAffaires, adresseCabinet);
                 break;
             default:
